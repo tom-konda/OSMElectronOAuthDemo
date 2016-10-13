@@ -48,10 +48,10 @@ catch (err) {
 
 const menuTemplate: Electron.MenuItemOptions[] = [
   {
-    label: '編集',
+    label: isDarwin ? '編集' : '編集(&E)',
     submenu: [
       {
-        label: isDarwin ? 'カット' : '切り取り (&X)',
+        label: isDarwin ? 'カット' : '切り取り(&T)',
         accelerator: 'CmdOrCtrl+X',
         role: 'cut',
         id: 'cut',
@@ -63,13 +63,13 @@ const menuTemplate: Electron.MenuItemOptions[] = [
         id: 'copy',
       },
       {
-        label: isDarwin ? 'ペースト' : '貼り付け (&V)',
+        label: isDarwin ? 'ペースト' : '貼り付け(&P)',
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
         id: 'paste',
       },
       {
-        label: isDarwin ? '削除' : '削除 (&D)',
+        label: isDarwin ? '削除' : '削除(&D)',
         accelerator: null,
         role: 'delete',
         id: 'delete',
@@ -171,31 +171,6 @@ else if (process.platform === 'win32' || process.platform === 'linux') {
       label: `OpenStreetMap`,
       submenu: [
         {
-          label: 'OAuthトークン設定(&O)...',
-          accelerator: 'Alt+F4',
-          role: 'quit',
-          click: function () {
-            let OAuthWindow = new BrowserWindow({
-              width: 800,
-              height: 600,
-              resizable: false,
-              minimizable: false,
-              webPreferences: {
-                defaultEncoding: 'utf8',
-              },
-            });
-            OAuthWindow.setMenu(null);
-            OAuthWindow.loadURL(`file://${__dirname}/renderer/oauth-settings.html`);
-
-            OAuthWindow.on('closed', function () {
-              OAuthWindow = null;
-            });
-          }
-        },
-        {
-          type: 'separator',
-        },
-        {
           label: '終了(&X)',
           accelerator: 'Alt+F4',
           role: 'quit',
@@ -242,7 +217,6 @@ app.on('ready', function () {
     width: 800,
     height: 600,
     resizable: true,
-    show: false,
   });
 
   if (oauthState.accessSecret) {
@@ -333,5 +307,17 @@ ipcMain.on(
         }
       }
     );
+  }
+)
+
+ipcMain.on(
+  'requestLogout',
+  (event) => {
+    oauthState.oauthToken = 
+    oauthState.oauthSecret = 
+    oauthState.accessToken = 
+    oauthState.accessSecret = '';
+    nodeStorage.setItem('oauthState', oauthState);
+    event.sender.send('oauthLogout');
   }
 )
