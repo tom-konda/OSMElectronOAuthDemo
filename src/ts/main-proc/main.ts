@@ -15,7 +15,16 @@ const nodeStorage = new JSONStorage.JSONStorage(storageLocation);
 
 const BrowserWindow = electron.BrowserWindow;
 
-var mainWindow: Electron.BrowserWindow;
+const OSMOAuth = new OAuth.OAuth(
+  `${authConfig.url}/oauth/request_token`,
+  `${authConfig.url}/oauth/access_token`,
+  authConfig.oauth_consumer_key,
+  authConfig.oauth_secret,
+  '1.0',
+  'http://localhost/',
+  'HMAC-SHA1'
+);
+let mainWindow: Electron.BrowserWindow;
 let oauthState = {
   oauthToken: '',
   oauthSecret: '',
@@ -262,16 +271,6 @@ app.on('ready', function () {
 ipcMain.on(
   'requestOAuthWindow',
   (event) => {
-    let oauth = new OAuth.OAuth(
-      `${authConfig.url}/oauth/request_token`,
-      `${authConfig.url}/oauth/access_token`,
-      authConfig.oauth_consumer_key,
-      authConfig.oauth_secret,
-      '1.0',
-      'http://localhost/',
-      'HMAC-SHA1'
-    );
-
     let OAuthWindow = new BrowserWindow(
       {
         width: 300,
@@ -293,7 +292,7 @@ ipcMain.on(
     OAuthWindow.setMenu(null);
     OAuthWindow.webContents.openDevTools(true);
 
-    oauth.getOAuthRequestToken(function (error, token, secret) {
+    OSMOAuth.getOAuthRequestToken(function (error, token, secret) {
       if (error === null) {
         oauthState.oauthToken = token;
         oauthState.oauthSecret = secret;
@@ -313,7 +312,7 @@ ipcMain.on(
       function (windowEvent, url) {
         let matched: RegExpMatchArray;
         if (matched = url.match(/\?oauth_token=([^&]*)&oauth_verifier=([^&]*)/)) {
-          oauth.getOAuthAccessToken(oauthState.oauthToken, oauthState.oauthSecret, matched[2],
+          OSMOAuth.getOAuthAccessToken(oauthState.oauthToken, oauthState.oauthSecret, matched[2],
             function (error, token, secret) {
               if (error === null) {
                 oauthState.accessToken = token;
@@ -329,7 +328,8 @@ ipcMain.on(
                 );
                 console.error(error);
               }
-            });
+            }
+          );
         }
       }
     );
