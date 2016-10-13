@@ -4,9 +4,13 @@ export default class OSMLoggedInComponent extends React.Component<AppComponentPr
   constructor (props:any) {
     super(props);
   }
+  private handleLogoutClick() {
+    const logoutButtonClickEvent = new CustomEvent('logoutButtonClicked');
+    window.dispatchEvent(logoutButtonClickEvent);
+  }
   render() {
     return (
-      <br />
+      <input type="button" value="ログアウト" onClick={this.handleLogoutClick} />
     )
   }
 }

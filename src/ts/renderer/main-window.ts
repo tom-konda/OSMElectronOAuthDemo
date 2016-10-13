@@ -11,6 +11,13 @@ document.addEventListener(
       }
     )
 
+    window.addEventListener(
+      'logoutButtonClicked',
+      () => {
+        ipcRenderer.send('requestOAuthWindow')
+      }
+    )
+
     ipcRenderer.on(
       'oauthSuccess',
       (event) => {
