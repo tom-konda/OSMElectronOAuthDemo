@@ -18,6 +18,9 @@ body {
 }
 
 .statusbar {
+  -webkit-appearance: statusbar;
+  -webkit-user-select: none;
+  cursor: default;
   font: status-bar;
-  height: 32px;
+  height: 1.2rem;
 }
