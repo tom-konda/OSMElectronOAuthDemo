@@ -3,7 +3,6 @@ import {ipcRenderer} from 'electron';
 document.addEventListener(
   'DOMContentLoaded',
   () => {
-    console.log(__dirname)
     window.addEventListener(
       'oauthButtonClicked',
       () => {
@@ -14,7 +13,7 @@ document.addEventListener(
     window.addEventListener(
       'logoutButtonClicked',
       () => {
-        ipcRenderer.send('requestOAuthWindow')
+        ipcRenderer.send('requestLogout')
       }
     )
 
@@ -23,7 +22,14 @@ document.addEventListener(
       (event) => {
         const oauthReadyEvent = new CustomEvent('oauthReady');
         document.body.dispatchEvent(oauthReadyEvent);
-      console.log(event)
+      }
+    )
+
+    ipcRenderer.on(
+      'oauthLogout',
+      (event) => {
+        const oauthLogoutEvent = new CustomEvent('oauthNotReady');
+        document.body.dispatchEvent(oauthLogoutEvent);
       }
     )
   }

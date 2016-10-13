@@ -16,7 +16,14 @@ export default class AppComponent extends React.Component<AppComponentProps, App
         this.setState({
           isOAuthReady : true,
         });
-        console.log(this.state)
+      }
+    );
+    document.body.addEventListener(
+      'oauthNotReady',
+      () => {
+        this.setState({
+          isOAuthReady : false,
+        });
       }
     );
   }
@@ -28,9 +35,7 @@ export default class AppComponent extends React.Component<AppComponentProps, App
     const mainComponent = (isOAuthReady:boolean) => {
       if (isOAuthReady) {
         return (
-          <section className="main">
-            <OSMLoggedInComponent />
-          </section>
+          <OSMLoggedInComponent />
         )
       } 
       else {
