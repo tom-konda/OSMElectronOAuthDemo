@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2015",
+        "lib": [
+            "es2016", "dom"
+        ],
+        "types": [
+            "node", "electron"
+        ],
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitAny": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noImplicitUseStrict": false,
+        "noEmitOnError": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": false,
+        "outDir": "../../../renderer/js"
+    }
+}

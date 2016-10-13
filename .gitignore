@@ -1,0 +1,9 @@
+/node_modules
+/src/ts/typings
+.DS_Store
+Thumb.db
+/typings
+/src/**/typings
+/renderer/**
+main.js
+temp/
