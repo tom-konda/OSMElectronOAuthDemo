@@ -1,6 +1,10 @@
 interface AppComponentProps {
 }
 
-interface AppComponentStates {
-  file : Uint8Array | null
+interface AppComponentState {
+  isOAuthReady : boolean
+}
+
+interface StatusBarComponentProps {
+  isOAuthReady : boolean
 }

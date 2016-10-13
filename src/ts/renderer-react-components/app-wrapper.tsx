@@ -1,16 +1,23 @@
 import * as React from 'react';
+import OSMLoggedInComponent from './osm-logged-in-component';
+import StatusbarComponent from './statusbar-component';
 
-export default class AppComponent extends React.Component<AppComponentProps, AppComponentStates> {
+export default class AppComponent extends React.Component<AppComponentProps, AppComponentState> {
   constructor () {
     super();
     this.state = {
-      file : null,
+      isOAuthReady : false,
     }
   }
   componentDidMount() {
     document.body.addEventListener(
-      'ipcFileLoaded',
-      (event) => console.log(event)
+      'oauthReady',
+      () => {
+        this.setState({
+          isOAuthReady : true,
+        });
+        console.log(this.state)
+      }
     );
   }
   handleOAuthClick() {
@@ -18,8 +25,27 @@ export default class AppComponent extends React.Component<AppComponentProps, App
     window.dispatchEvent(buttonClickEvent);
   }
   render() {
+    const mainComponent = (isOAuthReady:boolean) => {
+      if (isOAuthReady) {
+        return (
+          <section className="main">
+            <OSMLoggedInComponent />
+          </section>
+        )
+      } 
+      else {
+        return (
+          <section className="main">
+            <input type="button" value="OAuth開始" onClick={this.handleOAuthClick} />
+          </section>
+        )
+      }
+    }
     return (
-      <input type="button" value="OAuth開始" onClick={this.handleOAuthClick} />
+      <section id="AppComponent">
+        {mainComponent(this.state.isOAuthReady)}
+        <StatusbarComponent isOAuthReady={this.state.isOAuthReady} />
+      </section>
     )
   }
 }
