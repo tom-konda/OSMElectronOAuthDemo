@@ -1,6 +1,7 @@
 'use strict';
 import electron = require('electron');
 import OAuth = require('oauth');
+import JSONStorage = require('node-localstorage');
 const authConfig = <oauthJSONConfig>require('./config/settings.json');
 
 const ipcMain = electron.ipcMain;
@@ -9,14 +10,32 @@ const Menu = electron.Menu;
 const dialog = electron.dialog;
 const appName = app.getName();
 const isDarwin = process.platform === 'darwin';
+const storageLocation = app.getPath('userData');
+const nodeStorage = new JSONStorage.JSONStorage(storageLocation);
 
 const BrowserWindow = electron.BrowserWindow;
 
 var mainWindow: Electron.BrowserWindow;
-var oauthToken:string,
-    oauthSecret:string,
-    accessToken:string,
-    accessSecret:string;
+let oauthState = {
+  oauthToken: '',
+  oauthSecret: '',
+  accessToken: '',
+  accessSecret: '',
+};
+
+try {
+  const storedOAuthState = nodeStorage.getItem('oauthState');
+  if (storedOAuthState === null) {
+    nodeStorage.setItem('oauthState', oauthState);
+  }
+  else {
+    oauthState = storedOAuthState;
+  }
+}
+catch (err) {
+  console.error(err);
+  nodeStorage.setItem('oauthState', oauthState);
+}
 
 const menuTemplate: Electron.MenuItemOptions[] = [
   {
@@ -39,6 +58,21 @@ const menuTemplate: Electron.MenuItemOptions[] = [
         accelerator: 'CmdOrCtrl+V',
         role: 'paste',
         id: 'paste',
+      },
+      {
+        label: isDarwin ? '削除' : '削除 (&D)',
+        accelerator: null,
+        role: 'delete',
+        id: 'delete',
+      },
+      {
+        type: 'separator',
+      },
+      {
+        label: isDarwin ? 'すべてを選択' : 'すべてを選択 (&A)',
+        accelerator: 'CmdOrCtrl+A',
+        role: 'selectall',
+        id: 'selectAll',
       },
     ],
   },
@@ -137,8 +171,8 @@ else if (process.platform === 'win32' || process.platform === 'linux') {
               height: 600,
               resizable: false,
               minimizable: false,
-              webPreferences : {
-                defaultEncoding : 'utf8',
+              webPreferences: {
+                defaultEncoding: 'utf8',
               },
             });
             OAuthWindow.setMenu(null);
@@ -183,8 +217,6 @@ else if (process.platform === 'win32' || process.platform === 'linux') {
   );
 }
 
-console.log(process.env)
-
 let appMenu = Menu.buildFromTemplate(menuTemplate);
 
 app.on('window-all-closed', function () {
@@ -196,19 +228,28 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
 
   Menu.setApplicationMenu(appMenu);
-  
-
-  // mainWindow.on('ready-to-show', function () {
-  //   mainWindow.show();
-  //   mainWindow.focus();
-  // });
 
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     resizable: true,
+    show: false,
   });
-  
+
+  if (oauthState.accessSecret) {
+    mainWindow.webContents.on(
+      'did-finish-load',
+      () => {
+        mainWindow.webContents.send('oauthSuccess');
+      }
+    );
+  }
+
+  mainWindow.on('ready-to-show', function () {
+    mainWindow.show();
+    mainWindow.focus();
+  });
+
   mainWindow.loadURL(`file://${__dirname}/renderer/main.html`);
   mainWindow.webContents.openDevTools(true);
 
@@ -233,24 +274,29 @@ ipcMain.on(
 
     let OAuthWindow = new BrowserWindow(
       {
-        width: 800,
+        width: 300,
         height: 600,
         resizable: false,
         minimizable: false,
-        webPreferences : {
+        webPreferences: {
           javascript: false,
           nodeIntegration: false,
-          defaultEncoding : 'utf8',
+          defaultEncoding: 'utf8',
         }
       }
     );
+    OAuthWindow.on('ready-to-show', function () {
+      OAuthWindow.show();
+      OAuthWindow.focus();
+    });
+
     OAuthWindow.setMenu(null);
     OAuthWindow.webContents.openDevTools(true);
-    
-    oauth.getOAuthRequestToken(function(error, token, secret){
-      if(error === null){
-        oauthToken = token;
-        oauthSecret = secret;
+
+    oauth.getOAuthRequestToken(function (error, token, secret) {
+      if (error === null) {
+        oauthState.oauthToken = token;
+        oauthState.oauthSecret = secret;
         OAuthWindow.loadURL(`${authConfig.url}/oauth/authorize?oauth_token=${token}`);
       }
       else {
@@ -265,24 +311,25 @@ ipcMain.on(
     OAuthWindow.webContents.on(
       'will-navigate',
       function (windowEvent, url) {
-        console.log(windowEvent);
-        let matched:RegExpMatchArray;
-        if(matched = url.match(/\?oauth_token=([^&]*)&oauth_verifier=([^&]*)/)) {
-          oauth.getOAuthAccessToken(oauthToken, oauthSecret, matched[2], function(error, token, secret){
-            if (error === null) {
-              accessToken = token;
-              accessSecret = secret;
-              event.sender.send('oauthSuccess');
-              OAuthWindow.close();
-            }
-            else {
-              dialog.showErrorBox(
-                'OAuth に失敗しました。',
-                'error.'
-              );
-              console.error(error);
-            }
-          });
+        let matched: RegExpMatchArray;
+        if (matched = url.match(/\?oauth_token=([^&]*)&oauth_verifier=([^&]*)/)) {
+          oauth.getOAuthAccessToken(oauthState.oauthToken, oauthState.oauthSecret, matched[2],
+            function (error, token, secret) {
+              if (error === null) {
+                oauthState.accessToken = token;
+                oauthState.accessSecret = secret;
+                nodeStorage.setItem('oauthState', oauthState);
+                event.sender.send('oauthSuccess');
+                OAuthWindow.close();
+              }
+              else {
+                dialog.showErrorBox(
+                  'OAuth に失敗しました。',
+                  'error.'
+                );
+                console.error(error);
+              }
+            });
         }
       }
     );
