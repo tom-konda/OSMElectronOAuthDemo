@@ -217,6 +217,7 @@ app.on('ready', function () {
     width: 800,
     height: 600,
     resizable: true,
+    title: 'OpenStreetMap electron OAuth Demo App.',
   });
 
   if (oauthState.accessSecret) {
@@ -247,7 +248,7 @@ ipcMain.on(
   (event) => {
     let OAuthWindow = new BrowserWindow(
       {
-        width: 300,
+        width: 360,
         height: 600,
         resizable: false,
         minimizable: false,
@@ -264,7 +265,6 @@ ipcMain.on(
     });
 
     OAuthWindow.setMenu(null);
-    OAuthWindow.webContents.openDevTools(true);
 
     OSMOAuth.getOAuthRequestToken(function (error, token, secret) {
       if (error === null) {
@@ -274,10 +274,10 @@ ipcMain.on(
       }
       else {
         dialog.showErrorBox(
-          'OAuth に失敗しました。',
-          error.toString()
+          'OAuth Request Token の取得に失敗しました。',
+          `HTTP ステータスコード ${error.statusCode} が返りました`
         );
-        console.error(error);
+        console.error(error.data);
       }
     });
 
@@ -297,8 +297,8 @@ ipcMain.on(
               }
               else {
                 dialog.showErrorBox(
-                  'OAuth に失敗しました。',
-                  'error.'
+                  'OAuth Access Token の取得に失敗しました。',
+                  'HTTP ステータスコード ${error.statusCode} が返りました'
                 );
                 console.error(error);
               }
@@ -313,11 +313,37 @@ ipcMain.on(
 ipcMain.on(
   'requestLogout',
   (event) => {
-    oauthState.oauthToken = 
-    oauthState.oauthSecret = 
-    oauthState.accessToken = 
-    oauthState.accessSecret = '';
+    oauthState.oauthToken =
+      oauthState.oauthSecret =
+      oauthState.accessToken =
+      oauthState.accessSecret = '';
     nodeStorage.setItem('oauthState', oauthState);
     event.sender.send('oauthLogout');
+  }
+)
+
+ipcMain.on(
+  'requestUserData',
+  (event) => {
+    OSMOAuth.get(
+      `${authConfig.url}/api/0.6/user/details`,
+      oauthState.accessToken,
+      oauthState.accessSecret,
+      (error: any, XMLResponse: any, result: any) => {
+        if (error === null) {
+          event.sender.send('requestUserDataSuccess', XMLResponse);
+        }
+        else {
+          dialog.showErrorBox(
+            'ユーザデータの取得に失敗しました。',
+            `HTTP ステータスコード ${error.statusCode} が返りました。
+            アクセストークンが失効した可能性があります。
+            再ログインしてください。`
+          );
+          event.sender.send('oauthLogout');
+          console.error(error);
+        }
+      }
+    )
   }
 )
