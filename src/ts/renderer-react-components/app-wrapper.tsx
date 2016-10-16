@@ -2,11 +2,11 @@ import * as React from 'react';
 import OSMLoggedInComponent from './osm-logged-in-component';
 import StatusbarComponent from './statusbar-component';
 
-export default class AppComponent extends React.Component<AppComponentProps, AppComponentState> {
-  constructor () {
+export default class AppComponent extends React.Component<AppDefaultComponentProps, AppComponentState> {
+  constructor() {
     super();
     this.state = {
-      isOAuthReady : false,
+      isOAuthReady: false,
     }
   }
   componentDidMount() {
@@ -14,7 +14,7 @@ export default class AppComponent extends React.Component<AppComponentProps, App
       'oauthReady',
       () => {
         this.setState({
-          isOAuthReady : true,
+          isOAuthReady: true,
         });
       }
     );
@@ -22,7 +22,7 @@ export default class AppComponent extends React.Component<AppComponentProps, App
       'oauthNotReady',
       () => {
         this.setState({
-          isOAuthReady : false,
+          isOAuthReady: false,
         });
       }
     );
@@ -32,12 +32,12 @@ export default class AppComponent extends React.Component<AppComponentProps, App
     window.dispatchEvent(buttonClickEvent);
   }
   render() {
-    const mainComponent = (isOAuthReady:boolean) => {
+    const mainComponent = (isOAuthReady: boolean) => {
       if (isOAuthReady) {
         return (
           <OSMLoggedInComponent />
         )
-      } 
+      }
       else {
         return (
           <section className="main">
