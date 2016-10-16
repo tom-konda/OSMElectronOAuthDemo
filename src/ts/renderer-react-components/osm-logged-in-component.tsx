@@ -1,7 +1,8 @@
 import * as React from 'react';
+import OSMUserDataComponent from './osm-user-data-component';
 
-export default class OSMLoggedInComponent extends React.Component<AppComponentProps, void> {
-  constructor (props:any) {
+export default class OSMLoggedInComponent extends React.Component<AppDefaultComponentProps, void> {
+  constructor(props: any) {
     super(props);
   }
   private handleGetUserDataClick() {
@@ -16,6 +17,7 @@ export default class OSMLoggedInComponent extends React.Component<AppComponentPr
     return (
       <section className="main">
         <input type="button" value="OAuth テスト（ユーザデータ取得）" onClick={this.handleGetUserDataClick} />
+        <OSMUserDataComponent />
         <input type="button" value="OpenStreetMap からログアウト" onClick={this.handleLogoutClick} />
       </section>
     )
