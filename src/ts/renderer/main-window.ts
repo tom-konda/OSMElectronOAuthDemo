@@ -1,4 +1,4 @@
-import {ipcRenderer} from 'electron';
+import { ipcRenderer } from 'electron';
 
 document.addEventListener(
   'DOMContentLoaded',
@@ -17,6 +17,13 @@ document.addEventListener(
       }
     )
 
+    window.addEventListener(
+      'getUserDataButtonClicked',
+      () => {
+        ipcRenderer.send('requestUserData');
+      }
+    )
+
     ipcRenderer.on(
       'oauthSuccess',
       (event) => {
@@ -30,6 +37,20 @@ document.addEventListener(
       (event) => {
         const oauthLogoutEvent = new CustomEvent('oauthNotReady');
         document.body.dispatchEvent(oauthLogoutEvent);
+      }
+    )
+
+    ipcRenderer.on(
+      'requestUserDataSuccess',
+      (event: Electron.IpcRendererEvent, XMLResponse: string) => {
+        const parser = new DOMParser();
+        const receiveUserDataEvent = new CustomEvent(
+          'receiveUserData',
+          {
+            detail: parser.parseFromString(XMLResponse, 'text/xml'),
+          }
+        );
+        document.body.dispatchEvent(receiveUserDataEvent);
       }
     )
   }
