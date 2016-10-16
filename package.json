@@ -1,5 +1,5 @@
 {
-  "name": "ts2.0",
+  "name": "osm-electron-oauth-demo",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -18,8 +18,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "tom-konda",
+  "license": "MIT",
   "dependencies": {
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
