@@ -8,15 +8,15 @@ declare module 'oauth' {
       version: '1.0' | '1.0A',
       authorize_callback: string,
       signatureMethod: string,
-      nonceSize?: any|undefined,
-      customHeaders?:any| undefined
+      nonceSize?: any | undefined,
+      customHeaders?: any | undefined
     );
     authHeader(url: any, oauth_token: any, oauth_token_secret: any, method: any): any;
     delete(url: any, oauth_token: any, oauth_token_secret: any, callback: any): any;
     get(url: any, oauth_token: any, oauth_token_secret: any, callback: any): any;
-    getOAuthAccessToken(oauth_token: any, oauth_token_secret: any, oauth_verifier: any, callback: (...args:any[]) => any): void;
-    getOAuthRequestToken(extraParams: any, callback: (error:null|any, oauth_token:string, oauth_token_secret:string,  results:any[]) => any): void;
-    getOAuthRequestToken(callback: (error:null|any, oauth_token:string, oauth_token_secret:string,  results:any[]) => any): void;
+    getOAuthAccessToken(oauth_token: any, oauth_token_secret: any, oauth_verifier: any, callback: (...args: any[]) => any): void;
+    getOAuthRequestToken(extraParams: any, callback: (error: null | any, oauth_token: string, oauth_token_secret: string, results: any[]) => any): void;
+    getOAuthRequestToken(callback: (error: null | any, oauth_token: string, oauth_token_secret: string, results: any[]) => any): void;
     getProtectedResource(url: any, method: any, oauth_token: any, oauth_token_secret: any, callback: any): void;
     post(url: any, oauth_token: any, oauth_token_secret: any, post_body: any, post_content_type: any, callback: any): any;
     put(url: any, oauth_token: any, oauth_token_secret: any, post_body: any, post_content_type: any, callback: any): any;

@@ -1,10 +1,14 @@
-interface AppComponentProps {
+interface AppDefaultComponentProps {
 }
 
 interface AppComponentState {
-  isOAuthReady : boolean
+  isOAuthReady: boolean
 }
 
 interface StatusBarComponentProps {
-  isOAuthReady : boolean
+  isOAuthReady: boolean
+}
+
+interface OSMUserDataComponentState {
+  userData: null | Document
 }
