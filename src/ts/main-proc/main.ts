@@ -168,7 +168,7 @@ if (isDarwin) {
 else if (process.platform === 'win32' || process.platform === 'linux') {
   menuTemplate.unshift(
     {
-      label: `OpenStreetMap`,
+      label: `OpenStreetMap(&O)`,
       submenu: [
         {
           label: '終了(&X)',
@@ -217,7 +217,7 @@ app.on('ready', function () {
     width: 800,
     height: 600,
     resizable: true,
-    title: 'OpenStreetMap electron OAuth Demo App.',
+    title: 'OpenStreetMap electron OAuth Demo App',
   });
 
   if (oauthState.accessSecret) {
@@ -235,7 +235,6 @@ app.on('ready', function () {
   });
 
   mainWindow.loadURL(`file://${__dirname}/renderer/main.html`);
-  mainWindow.webContents.openDevTools(true);
 
   // ウィンドウが閉じられたらアプリも終了
   mainWindow.on('closed', function () {
