@@ -17,6 +17,9 @@ export default class OSMUserDataComponent extends React.Component<AppDefaultComp
       }
     );
   }
+  componentWillUnmount() {
+    document.body.removeEventListener('receiveUserData');
+  }
   render() {
     let userDataContent: JSX.Element[] = null;
     if (this.state.userData !== null) {

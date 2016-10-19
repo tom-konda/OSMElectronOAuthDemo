@@ -27,6 +27,10 @@ export default class AppComponent extends React.Component<AppDefaultComponentPro
       }
     );
   }
+  componentWillUnmount() {
+    document.body.removeEventListener('oauthReady');
+    document.body.removeEventListener('oauthNotReady');
+  }
   handleOAuthClick() {
     const buttonClickEvent = new CustomEvent('oauthButtonClicked');
     window.dispatchEvent(buttonClickEvent);
