@@ -1,0 +1,5 @@
+{
+  "oauth_consumer_key": "APP_CONSUMER_KEY",
+  "oauth_secret": "APP_CONSUMER_SECRET_KEY",
+  "server": "http://api06.dev.openstreetmap.org"
+}
