@@ -16,8 +16,8 @@ const nodeStorage = new JSONStorage.JSONStorage(storageLocation);
 const BrowserWindow = electron.BrowserWindow;
 
 const OSMOAuth = new OAuth.OAuth(
-  `${authConfig.url}/oauth/request_token`,
-  `${authConfig.url}/oauth/access_token`,
+  `${authConfig.server}/oauth/request_token`,
+  `${authConfig.server}/oauth/access_token`,
   authConfig.oauth_consumer_key,
   authConfig.oauth_secret,
   '1.0',
@@ -269,7 +269,7 @@ ipcMain.on(
       if (error === null) {
         oauthState.oauthToken = token;
         oauthState.oauthSecret = secret;
-        OAuthWindow.loadURL(`${authConfig.url}/oauth/authorize?oauth_token=${token}`);
+        OAuthWindow.loadURL(`${authConfig.server}/oauth/authorize?oauth_token=${token}`);
       }
       else {
         dialog.showErrorBox(
@@ -325,7 +325,7 @@ ipcMain.on(
   'requestUserData',
   (event) => {
     OSMOAuth.get(
-      `${authConfig.url}/api/0.6/user/details`,
+      `${authConfig.server}/api/0.6/user/details`,
       oauthState.accessToken,
       oauthState.accessSecret,
       (error: any, XMLResponse: any, result: any) => {
