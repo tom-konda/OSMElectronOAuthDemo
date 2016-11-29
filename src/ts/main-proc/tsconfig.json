@@ -3,10 +3,12 @@
         "module": "commonjs",
         "target": "es6",
         "lib": [
-            "es2016", "dom"
+            "es2016",
+            "dom"
         ],
         "types": [
-            "node", "electron"
+            "node",
+            "electron"
         ],
         "forceConsistentCasingInFileNames": true,
         "noImplicitAny": true,
@@ -17,5 +19,11 @@
         "noEmitOnError": true,
         "sourceMap": false,
         "outDir": "../../../temp/main-proc"
-    }
+    },
+    "include": [
+        "main.ts",
+        "**.d.ts",
+        "app/**.ts"
+    ],
+    "exclude": []
 }
