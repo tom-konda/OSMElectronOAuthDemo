@@ -7,5 +7,6 @@ Thumb.db
 /renderer/**
 main.js
 temp/
+app/
 config/dev.settings.json
 config/settings.json
