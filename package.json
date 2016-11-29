@@ -7,8 +7,12 @@
     "electron": "0.0.1"
   },
   "scripts": {
+    "prebuild": "npm-run-all clean:*",
     "build": "npm-run-all pug:build-* --parallel ts:build-* scss:build-* --serial rollup:build-* copy-js",
-    "copy-js": "node -e \"require('shelljs').cp('temp/main-proc/main.js', './')\"",
+    "copy-js": "node -e \"require('shelljs').cp('-R', 'temp/main-proc/*', './');\"",
+    "clean:renderer": "node -e \"require('shelljs').rm('-r', './renderer')\"",
+    "clean:main.js": "node -e \"require('shelljs').rm('./main.js')\"",
+    "clean:temp": "node -e \"require('shelljs').rm('-r', './temp')\"",
     "pug:build-renderer": "pug -P -o ./renderer ./src/pug/renderer",
     "scss:build-common": "node-sass -r --output-style expanded -o ./renderer/css ./src/scss",
     "ts:build-main-proc": "tsc -p ./src/ts/main-proc",
