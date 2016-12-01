@@ -149,7 +149,7 @@ else if (process.platform === 'win32' || process.platform === 'linux') {
               {
                 'type': 'info',
                 'title': `${appName} について`,
-                'message': 'ctyViewer',
+                'message': 'osm-electron-oauth-demo',
                 'buttons': [],
               }
             )
