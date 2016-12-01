@@ -2,8 +2,5 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es2015"
-    },
-    "files": [
-      "webpack.config.js"
-    ]
+    }
 }
