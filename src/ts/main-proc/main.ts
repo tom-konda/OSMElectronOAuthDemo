@@ -71,7 +71,6 @@ app.on('ready', function () {
     mainWindow.webContents.on(
       'did-finish-load',
       () => {
-        mainWindow.webContents.openDevTools()
         mainWindow.webContents.send('oauthSuccess');
       }
     );
@@ -184,8 +183,8 @@ ipcMain.on(
           dialog.showErrorBox(
             'ユーザデータの取得に失敗しました。',
             `HTTP ステータスコード ${error.statusCode} が返りました。
-      アクセストークンが失効した可能性があります。
-      再ログインしてください。`
+    アクセストークンが失効した可能性があります。
+    再ログインしてください。`
           );
           event.sender.send('oauthLogout');
           oauthState.oauthToken =
