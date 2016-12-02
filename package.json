@@ -13,6 +13,7 @@
     "clean:renderer": "node -e \"require('shelljs').rm('-r', './renderer')\"",
     "clean:main.js": "node -e \"require('shelljs').rm('./main.js')\"",
     "clean:temp": "node -e \"require('shelljs').rm('-r', './temp')\"",
+    "electron": "electron .",
     "pug:build-renderer": "pug -P -o ./renderer ./src/pug/renderer",
     "scss:build-common": "node-sass -r --output-style expanded -o ./renderer/css ./src/scss",
     "ts:build-main-proc": "tsc -p ./src/ts/main-proc",
@@ -25,6 +26,7 @@
   "author": "tom-konda",
   "license": "MIT",
   "dependencies": {
+    "electron": "^1.4.10",
     "react": "^15.3.1",
     "react-dom": "^15.3.1"
   },
