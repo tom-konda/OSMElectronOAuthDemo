@@ -18,8 +18,8 @@ declare module 'oauth' {
     getOAuthRequestToken(extraParams: any, callback: (error: null | any, oauth_token: string, oauth_token_secret: string, results: any[]) => any): void;
     getOAuthRequestToken(callback: (error: null | any, oauth_token: string, oauth_token_secret: string, results: any[]) => any): void;
     getProtectedResource(url: any, method: any, oauth_token: any, oauth_token_secret: any, callback: any): void;
-    post(url: any, oauth_token: any, oauth_token_secret: any, post_body: any, post_content_type: any, callback: any): any;
-    put(url: any, oauth_token: any, oauth_token_secret: any, post_body: any, post_content_type: any, callback: any): any;
+    post(url: any, oauth_token: any, oauth_token_secret: any, post_body: any, post_content_type: any, callback: (...args: any[]) => any): any;
+    put(url: any, oauth_token: any, oauth_token_secret: any, post_body: any, post_content_type: any, callback: (...args: any[]) => any): any;
     setClientOptions(options: any): void;
     signUrl(url: any, oauth_token: any, oauth_token_secret: any, method: any): any;
   }
