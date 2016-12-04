@@ -24,6 +24,13 @@ document.addEventListener(
       }
     )
 
+    window.addEventListener(
+      'testChangesetButtonClicked',
+      () => {
+        ipcRenderer.send('requestTestChangeset');
+      }
+    )
+
     ipcRenderer.on(
       'oauthSuccess',
       (event) => {
