@@ -1,7 +1,6 @@
 'use strict';
 import electron = require('electron');
-const app = electron.app;
-const dialog = electron.dialog;
+const {app, dialog} = electron;
 const appName = app.getName();
 const isDarwin = process.platform === 'darwin';
 
